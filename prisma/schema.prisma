@@ -1,0 +1,52 @@
+// Prisma schema for Toaster social agent
+// Maps X handles to Sui wallets and tracks delegated CreatorCaps
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id          Int      @id @default(autoincrement())
+  xHandle     String   @unique @map("x_handle")  // X (Twitter) handle without @
+  suiAddress  String   @unique @map("sui_address") // Sui wallet address (0x...)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  // Rate limiting: track last free launch timestamp
+  lastFreeLaunchAt DateTime? @map("last_free_launch_at")
+
+  delegations Delegation[]
+
+  @@map("users")
+}
+
+model Delegation {
+  id              Int      @id @default(autoincrement())
+  userId          Int      @map("user_id")
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // The CreatorCap object ID transferred to Toaster's treasury wallet
+  creatorCapId    String   @unique @map("creator_cap_id")
+
+  // Token metadata
+  tokenName       String   @map("token_name")
+  tokenTicker     String   @map("token_ticker")
+
+  // Optional staking object ID (populated after first stake)
+  stakingObjectId String?  @map("staking_object_id")
+
+  // Lifecycle timestamps
+  lastClaimAt     DateTime? @map("last_claim_at")
+  lastStakeAt     DateTime? @map("last_stake_at")
+  lastRewardAt    DateTime? @map("last_reward_at")
+
+  isActive        Boolean  @default(true) @map("is_active")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  @@map("delegations")
+}
