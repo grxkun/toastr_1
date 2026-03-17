@@ -1,0 +1,25 @@
+node_modules/
+dist/
+.env
+*.env
+.env.local
+prisma/migrations/
+
+# Build artifacts
+*.js.map
+*.d.ts.map
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
