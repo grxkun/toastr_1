@@ -1,5 +1,6 @@
 import { TwitterApi, ETwitterStreamEvent } from 'twitter-api-v2';
-import { handleLaunch, handleRegister } from '../handlers/launch';
+import { handleLaunch } from '../handlers/launch';
+import { handleRegister } from '../handlers/register';
 import { handleDelegate } from '../handlers/delegate';
 import { invalidCommandReply } from '../utils/replies';
 
